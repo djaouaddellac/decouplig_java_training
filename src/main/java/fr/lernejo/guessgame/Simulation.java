@@ -2,6 +2,8 @@ package fr.lernejo.guessgame;
 import fr.lernejo.logger.Logger;
 import fr.lernejo.logger.LoggerFactory;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 public class Simulation {
@@ -37,8 +39,8 @@ public class Simulation {
             return false;
         }
     }*/
-    private boolean nextRound() {
-        long guess = player.askNextGuess();
+    private boolean nextRound(long guess) {
+        /*long guess = player.askNextGuess();*/
         if(guess==numberToGuess) {
             return true;
         } else {
@@ -47,15 +49,22 @@ public class Simulation {
         }
     }
 
-    public void loopUntilPlayerSucceed(){
-        boolean shouldcontinue=true;
-        while(shouldcontinue){
-            nextRound();
-            break;
-        }
-        /*
-        do{
-        }while (!nextRound());
-        logger.log("well done");*/
+    public void loopUntilPlayerSucceed(long maxLoop){
+        long guess;
+        int counter=0;
+        long startTime=System.currentTimeMillis();
+        do{ guess = player.askNextGuess();
+            counter++;
+        } while(counter<maxLoop && !nextRound(guess));
+        logger.log("well done");
+
+        long endTime=System.currentTimeMillis();
+        long duration=(endTime - startTime);
+
+        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("mm:ss.SSS");
+        Date date= new Date(duration);
+
+        String time = simpleDateFormat.format(date.getTime());
+        logger.log(time);
     }
 }
